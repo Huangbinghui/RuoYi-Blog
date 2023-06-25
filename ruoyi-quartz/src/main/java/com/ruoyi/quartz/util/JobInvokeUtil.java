@@ -52,6 +52,7 @@ public class JobInvokeUtil
     {
         if (StringUtils.isNotNull(methodParams) && methodParams.size() > 0)
         {
+            // 通过反射的方式获得方法对象
             Method method = bean.getClass().getMethod(methodName, getMethodParamsType(methodParams));
             method.invoke(bean, getMethodParamsValue(methodParams));
         }

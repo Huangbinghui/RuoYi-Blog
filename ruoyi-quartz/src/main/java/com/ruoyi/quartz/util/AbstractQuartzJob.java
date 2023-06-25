@@ -17,7 +17,9 @@ import com.ruoyi.quartz.domain.SysJobLog;
 import com.ruoyi.quartz.service.ISysJobLogService;
 
 /**
- * 抽象quartz调用
+ * 抽象quartz调用，两个实现类：
+ * QuartzDisallowConcurrentExecution，
+ * QuartzJobExecution
  *
  * @author ruoyi
  */
@@ -37,11 +39,13 @@ public abstract class AbstractQuartzJob implements Job
         BeanUtils.copyBeanProp(sysJob, context.getMergedJobDataMap().get(ScheduleConstants.TASK_PROPERTIES));
         try
         {
+            // 记录当前时间
             before(context, sysJob);
             if (sysJob != null)
             {
                 doExecute(context, sysJob);
             }
+            // 记录日志
             after(context, sysJob, null);
         }
         catch (Exception e)
@@ -70,9 +74,12 @@ public abstract class AbstractQuartzJob implements Job
      */
     protected void after(JobExecutionContext context, SysJob sysJob, Exception e)
     {
+        // 从本地线程获取当前时间
         Date startTime = threadLocal.get();
+        // 删除本地变量
         threadLocal.remove();
 
+        // 创建一个日志对象
         final SysJobLog sysJobLog = new SysJobLog();
         sysJobLog.setJobName(sysJob.getJobName());
         sysJobLog.setJobGroup(sysJob.getJobGroup());

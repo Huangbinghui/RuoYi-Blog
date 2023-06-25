@@ -33,6 +33,28 @@ public class RuoYiConfig
     /** 验证码类型 */
     private static String captchaType;
 
+    /** 数据中心ID */
+    private static long datacenterId;
+
+    /** 机器ID */
+    private static long machineId;
+
+    public static long getDatacenterId() {
+        return datacenterId;
+    }
+
+    public static void setDatacenterId(long datacenterId) {
+        RuoYiConfig.datacenterId = datacenterId;
+    }
+
+    public static long getMachineId() {
+        return machineId;
+    }
+
+    public static void setMachineId(long machineId) {
+        RuoYiConfig.machineId = machineId;
+    }
+
     public String getName()
     {
         return name;

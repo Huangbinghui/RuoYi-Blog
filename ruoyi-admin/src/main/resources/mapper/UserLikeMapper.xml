@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.blog.mapper.UserLikeMapper">
+
+    <resultMap type="UserLike" id="UserLikeResult">
+        <result property="targetId" column="target_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="isLike" column="is_like"/>
+        <result property="likeType" column="like_type"/>
+    </resultMap>
+
+    <sql id="selectUserLikeVo">
+        select target_id, user_id, is_like, like_type
+        from rr_user_like
+    </sql>
+
+    <select id="selectUserLikeList" parameterType="UserLike" resultMap="UserLikeResult">
+        <include refid="selectUserLikeVo"/>
+        <where>
+            <if test="targetId != null ">and target_id = #{targetId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="isLike != null ">and is_like = #{isLike}</if>
+            <if test="likeType != null  and likeType != ''">and like_type = #{likeType}</if>
+        </where>
+    </select>
+
+    <select id="selectUserLikeByTargetId" parameterType="Long" resultMap="UserLikeResult">
+        <include refid="selectUserLikeVo"/>
+        where target_id = #{targetId}
+    </select>
+
+    <insert id="insertUserLike" parameterType="UserLike">
+        insert into rr_user_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="targetId != null">target_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isLike != null">is_like,</if>
+            <if test="likeType != null">like_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="targetId != null">#{targetId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isLike != null">#{isLike},</if>
+            <if test="likeType != null">#{likeType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateUserLike" parameterType="UserLike">
+        update rr_user_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isLike != null">is_like = #{isLike},</if>
+            <if test="likeType != null">like_type = #{likeType},</if>
+        </trim>
+        where target_id = #{targetId}
+    </update>
+
+    <delete id="deleteUserLikeByTargetId" parameterType="Long">
+        delete
+        from rr_user_like
+        where target_id = #{targetId}
+    </delete>
+
+    <delete id="deleteUserLikeByTargetIds" parameterType="String">
+        delete from rr_user_like where target_id in
+        <foreach item="targetId" collection="array" open="(" separator="," close=")">
+            #{targetId}
+        </foreach>
+    </delete>
+</mapper>

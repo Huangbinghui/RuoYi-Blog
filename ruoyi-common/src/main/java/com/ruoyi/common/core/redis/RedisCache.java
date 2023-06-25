@@ -50,6 +50,18 @@ public class RedisCache
     }
 
     /**
+     * 缓存基本的对象，redis中不存在时才缓存，Integer、String、实体类等
+     *
+     * @param key 缓存的键值
+     * @param value 缓存的值
+     * @param timeout 时间
+     * @param timeUnit 时间颗粒度
+     */
+    public <T> Boolean cacheObjectIfAbsent(final String key, final T value, final Integer timeout,final TimeUnit timeUnit){
+        return redisTemplate.opsForValue().setIfAbsent(key, value, timeout, timeUnit);
+    }
+
+    /**
      * 设置有效时间
      *
      * @param key Redis键
@@ -169,6 +181,19 @@ public class RedisCache
             setOperation.add(it.next());
         }
         return setOperation;
+    }
+
+    public <T> Long addCacheSet(final String key,final T data){
+        BoundSetOperations<String, T> setOperation = redisTemplate.boundSetOps(key);
+        Long result = setOperation.add(data);
+        return result;
+    }
+
+    public <T> Boolean isSetMember(final String key,final T data){
+        if (!redisTemplate.hasKey(key)){
+            return false;
+        }
+        return redisTemplate.opsForSet().isMember(key,data);
     }
 
     /**

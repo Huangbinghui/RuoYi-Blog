@@ -27,6 +27,8 @@ public class CacheConstants
      */
     public static final String SYS_DICT_KEY = "sys_dict:";
 
+    public static final String SYS_DICT_KEY_LOCK = "lock:sys_dict:";
+
     /**
      * 防重提交 redis key
      */
@@ -41,4 +43,22 @@ public class CacheConstants
      * 登录账户密码错误次数 redis key
      */
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
+
+    public static final String SHOP_KEY = "shop:";
+    public static final Integer CACHE_SHOP_TTL = 30;
+    public static final Integer CACHE_NULL_TTL = 10;
+
+    /**
+     * 秒杀优惠券的分布式锁 key
+     */
+    public static final String SALE_VOUCHER_LOCK = "lock:voucher:";
+    /**
+     * 秒杀优惠券的库存 key
+     */
+    public static final String FLASH_SALE_VOUCHER_STOCK = "stock:voucher:";
+    /**
+     * 秒杀优惠券的库存 key
+     */
+    public static final String FLASH_SALE_VOUCHER_ORDER = "order:voucher:";
+
 }

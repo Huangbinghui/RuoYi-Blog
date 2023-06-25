@@ -59,6 +59,7 @@ public class ScheduleUtils
      */
     public static void createScheduleJob(Scheduler scheduler, SysJob job) throws SchedulerException, TaskException
     {
+        // 创建定时任务类，有可并行的和禁止并行的
         Class<? extends Job> jobClass = getQuartzJobClass(job);
         // 构建job信息
         Long jobId = job.getJobId();
