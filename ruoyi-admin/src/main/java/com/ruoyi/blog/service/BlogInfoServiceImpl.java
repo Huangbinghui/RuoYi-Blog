@@ -1,10 +1,15 @@
 package com.ruoyi.blog.service;
 
 import java.util.List;
+
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.uuid.SnowFlake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
+
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.blog.domain.Blog;
@@ -18,10 +23,14 @@ import com.ruoyi.blog.domain.BlogInfo;
  * @date 2023-06-17
  */
 @Service
-public class BlogInfoServiceImpl implements IBlogInfoService
-{
+public class BlogInfoServiceImpl implements IBlogInfoService {
+
+
     @Autowired
     private BlogInfoMapper blogInfoMapper;
+
+    @Autowired
+    private SnowFlake snowFlake;
 
     /**
      * 查询博客管理
@@ -30,8 +39,7 @@ public class BlogInfoServiceImpl implements IBlogInfoService
      * @return 博客管理
      */
     @Override
-    public BlogInfo selectBlogInfoById(Long id)
-    {
+    public BlogInfo selectBlogInfoById(Long id) {
         return blogInfoMapper.selectBlogInfoById(id);
     }
 
@@ -42,8 +50,7 @@ public class BlogInfoServiceImpl implements IBlogInfoService
      * @return 博客管理
      */
     @Override
-    public List<BlogInfo> selectBlogInfoList(BlogInfo blogInfo)
-    {
+    public List<BlogInfo> selectBlogInfoList(BlogInfo blogInfo) {
         return blogInfoMapper.selectBlogInfoList(blogInfo);
     }
 
@@ -55,8 +62,8 @@ public class BlogInfoServiceImpl implements IBlogInfoService
      */
     @Transactional
     @Override
-    public int insertBlogInfo(BlogInfo blogInfo)
-    {
+    public int insertBlogInfo(BlogInfo blogInfo) {
+        blogInfo.setId(snowFlake.nextId());
         blogInfo.setCreateTime(DateUtils.getNowDate());
         int rows = blogInfoMapper.insertBlogInfo(blogInfo);
         insertBlog(blogInfo);
@@ -71,27 +78,13 @@ public class BlogInfoServiceImpl implements IBlogInfoService
      */
     @Transactional
     @Override
-    public int updateBlogInfo(BlogInfo blogInfo)
-    {
+    public int updateBlogInfo(BlogInfo blogInfo) {
         blogInfo.setUpdateTime(DateUtils.getNowDate());
         blogInfoMapper.deleteBlogByInfoId(blogInfo.getId());
         insertBlog(blogInfo);
         return blogInfoMapper.updateBlogInfo(blogInfo);
     }
 
-    /**
-     * 批量删除博客管理
-     *
-     * @param ids 需要删除的博客管理主键
-     * @return 结果
-     */
-    @Transactional
-    @Override
-    public int deleteBlogInfoByIds(Long[] ids)
-    {
-        blogInfoMapper.deleteBlogByInfoIds(ids);
-        return blogInfoMapper.deleteBlogInfoByIds(ids);
-    }
 
     /**
      * 删除博客管理信息
@@ -101,10 +94,8 @@ public class BlogInfoServiceImpl implements IBlogInfoService
      */
     @Transactional
     @Override
-    public int deleteBlogInfoById(Long id)
-    {
-        blogInfoMapper.deleteBlogByInfoId(id);
-        return blogInfoMapper.deleteBlogInfoById(id);
+    public int deleteBlogInfoById(Long id) {
+        return blogInfoMapper.deleteBlogByInfoId(id);
     }
 
     /**
@@ -112,22 +103,14 @@ public class BlogInfoServiceImpl implements IBlogInfoService
      *
      * @param blogInfo 博客管理对象
      */
-    public void insertBlog(BlogInfo blogInfo)
-    {
-        List<Blog> blogList = blogInfo.getBlogList();
+    public void insertBlog(BlogInfo blogInfo) {
+        Blog blog = blogInfo.getBlog();
         Long id = blogInfo.getId();
-        if (StringUtils.isNotNull(blogList))
-        {
-            List<Blog> list = new ArrayList<Blog>();
-            for (Blog blog : blogList)
-            {
+        if (StringUtils.isNotNull(blog)) {
                 blog.setInfoId(id);
-                list.add(blog);
-            }
-            if (list.size() > 0)
-            {
-                blogInfoMapper.batchBlog(list);
-            }
+                blogInfoMapper.insertBlog(blog);
+        } else {
+            throw new ServiceException("博客内容为空！",999999);
         }
     }
 }

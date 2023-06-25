@@ -28,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2023-06-17
  */
 @RestController
-@RequestMapping("/blog/blog")
+@RequestMapping("/blog")
 public class BlogInfoController extends BaseController
 {
     @Autowired
@@ -96,9 +96,9 @@ public class BlogInfoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('blog:blog:remove')")
     @Log(title = "博客管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    @DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id)
     {
-        return toAjax(blogInfoService.deleteBlogInfoByIds(ids));
+        return toAjax(blogInfoService.deleteBlogInfoById(id));
     }
 }

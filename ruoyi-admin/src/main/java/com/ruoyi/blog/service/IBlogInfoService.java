@@ -44,13 +44,6 @@ public interface IBlogInfoService
      */
     public int updateBlogInfo(BlogInfo blogInfo);
 
-    /**
-     * 批量删除博客管理
-     *
-     * @param ids 需要删除的博客管理主键集合
-     * @return 结果
-     */
-    public int deleteBlogInfoByIds(Long[] ids);
 
     /**
      * 删除博客管理信息

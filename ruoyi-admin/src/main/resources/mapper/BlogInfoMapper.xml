@@ -22,7 +22,7 @@
     </resultMap>
 
     <resultMap id="BlogInfoResult" type="BlogInfo" extends="baseBlogInfoResult">
-        <association property="blog" column="id" resultMap="BlogResult" />
+        <association property="blog" column="id" select="selectBlogList"/>
     </resultMap>
 
     <resultMap type="Blog" id="BlogResult">
@@ -32,6 +32,10 @@
 
     <sql id="selectBlogInfoVo">
         select id, is_deleted, title, blog_type, is_top, author_id, original_link, is_original, is_private, version, create_by, create_time, update_by, update_time from rm_blog_info
+    </sql>
+
+    <sql id="selectBlogVo">
+        select info_id,content from rm_blog
     </sql>
 
     <select id="selectBlogInfoList" parameterType="BlogInfo" resultMap="BlogInfoResult">
@@ -46,6 +50,13 @@
             <if test="isOriginal != null "> and is_original = #{isOriginal}</if>
             <if test="isPrivate != null "> and is_private = #{isPrivate}</if>
             <if test="version != null  and version != ''"> and version = #{version}</if>
+        </where>
+    </select>
+
+    <select id="selectBlogList" parameterType="Integer" resultMap="BlogResult" >
+        <include refid="selectBlogVo"></include>
+        <where>
+            <if test="infoId != null "> and info_id = #{infoId}</if>
         </where>
     </select>
 
@@ -111,14 +122,11 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteBlogByInfoId" parameterType="Long">
-        delete from rm_blog where info_id = #{infoId}
-    </delete>
+    <update id="deleteBlogByInfoId" parameterType="Long">
+        update rm_blog_info set is_deleted = '1' where id = #{id}
+    </update>
 
-    <insert id="batchBlog">
-        insert into rm_blog( info_id, content) values
-        <foreach item="item" index="index" collection="list" separator=",">
-            ( #{item.infoId}, #{item.content})
-        </foreach>
+    <insert id="insertBlog">
+        insert into rm_blog( info_id, content) values ( #{item.infoId}, #{item.content})
     </insert>
 </mapper>

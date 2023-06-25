@@ -3,6 +3,7 @@ package com.ruoyi.blog.mapper;
 import java.util.List;
 import com.ruoyi.blog.domain.BlogInfo;
 import com.ruoyi.blog.domain.Blog;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 博客管理Mapper接口
@@ -10,6 +11,7 @@ import com.ruoyi.blog.domain.Blog;
  * @author herberth
  * @date 2023-06-17
  */
+@Mapper
 public interface BlogInfoMapper
 {
     /**
@@ -47,10 +49,10 @@ public interface BlogInfoMapper
     /**
      * 批量新增博客内容
      *
-     * @param blogList 博客内容列表
+     * @param blog 博客内容
      * @return 结果
      */
-    public int batchBlog(List<Blog> blogList);
+    public int insertBlog(Blog blog);
 
 
     /**
