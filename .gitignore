@@ -46,3 +46,6 @@ nbdist/
 !*/build/*.html
 !*/build/*.xml
 .vscode
+
+dump.rdb
+log/
