@@ -5,20 +5,20 @@
 <mapper namespace="com.ruoyi.blog.mapper.BlogInfoMapper">
 
     <resultMap type="BlogInfo" id="baseBlogInfoResult">
-        <result property="id"    column="id"    />
-        <result property="isDeleted"    column="is_deleted"    />
-        <result property="title"    column="title"    />
-        <result property="blogType"    column="blog_type"    />
-        <result property="isTop"    column="is_top"    />
-        <result property="authorId"    column="author_id"    />
-        <result property="originalLink"    column="original_link"    />
-        <result property="isOriginal"    column="is_original"    />
-        <result property="isPrivate"    column="is_private"    />
-        <result property="version"    column="version"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="title" column="title"/>
+        <result property="blogType" column="blog_type"/>
+        <result property="isTop" column="is_top"/>
+        <result property="authorId" column="author_id"/>
+        <result property="originalLink" column="original_link"/>
+        <result property="isOriginal" column="is_original"/>
+        <result property="isPrivate" column="is_private"/>
+        <result property="version" column="version"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <resultMap id="BlogInfoResult" type="BlogInfo" extends="baseBlogInfoResult">
@@ -26,43 +26,72 @@
     </resultMap>
 
     <resultMap type="Blog" id="BlogResult">
-        <result property="infoId"    column="info_id"    />
-        <result property="content"    column="content"    />
+        <result property="infoId" column="info_id"/>
+        <result property="content" column="content"/>
     </resultMap>
 
     <sql id="selectBlogInfoVo">
-        select id, is_deleted, title, blog_type, is_top, author_id, original_link, is_original, is_private, version, create_by, create_time, update_by, update_time from rm_blog_info
+        select id,
+               is_deleted,
+               title,
+               blog_type,
+               is_top,
+               author_id,
+               original_link,
+               is_original,
+               is_private,
+               version,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from rm_blog_info
     </sql>
 
     <sql id="selectBlogVo">
-        select info_id,content from rm_blog
+        select info_id, content
+        from rm_blog
     </sql>
 
     <select id="selectBlogInfoList" parameterType="BlogInfo" resultMap="BlogInfoResult">
         <include refid="selectBlogInfoVo"/>
         <where>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
-            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
-            <if test="blogType != null "> and blog_type = #{blogType}</if>
-            <if test="isTop != null "> and is_top = #{isTop}</if>
-            <if test="authorId != null "> and author_id = #{authorId}</if>
-            <if test="originalLink != null  and originalLink != ''"> and original_link = #{originalLink}</if>
-            <if test="isOriginal != null "> and is_original = #{isOriginal}</if>
-            <if test="isPrivate != null "> and is_private = #{isPrivate}</if>
-            <if test="version != null  and version != ''"> and version = #{version}</if>
+            <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="blogType != null ">and blog_type = #{blogType}</if>
+            <if test="isTop != null ">and is_top = #{isTop}</if>
+            <if test="authorId != null ">and author_id = #{authorId}</if>
+            <if test="originalLink != null  and originalLink != ''">and original_link = #{originalLink}</if>
+            <if test="isOriginal != null ">and is_original = #{isOriginal}</if>
+            <if test="isPrivate != null ">and is_private = #{isPrivate}</if>
+            <if test="version != null  and version != ''">and version = #{version}</if>
         </where>
     </select>
 
-    <select id="selectBlogList" parameterType="Integer" resultMap="BlogResult" >
+    <select id="selectBlogList" parameterType="Long" resultMap="BlogResult">
         <include refid="selectBlogVo"></include>
         <where>
-            <if test="infoId != null "> and info_id = #{infoId}</if>
+            <if test="infoId != null ">and info_id = #{infoId}</if>
         </where>
     </select>
 
     <select id="selectBlogInfoById" parameterType="Long" resultMap="BlogInfoResult">
-        select a.id, a.is_deleted, a.title, a.blog_type, a.is_top, a.author_id, a.original_link, a.is_original, a.is_private, a.version, a.create_by, a.create_time, a.update_by, a.update_time,
-               b.info_id as info_id, b.content as content
+        select a.id,
+               a.is_deleted,
+               a.title,
+               a.blog_type,
+               a.is_top,
+               a.author_id,
+               a.original_link,
+               a.is_original,
+               a.is_private,
+               a.version,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               b.info_id as info_id,
+               b.content as content
         from rm_blog_info a
                  left join rm_blog b on b.info_id = a.id
         where a.id = #{id}
@@ -123,10 +152,13 @@
     </update>
 
     <update id="deleteBlogByInfoId" parameterType="Long">
-        update rm_blog_info set is_deleted = '1' where id = #{id}
+        update rm_blog_info
+        set is_deleted = '1'
+        where id = #{id}
     </update>
 
     <insert id="insertBlog">
-        insert into rm_blog( info_id, content) values ( #{item.infoId}, #{item.content})
+        insert into rm_blog(info_id, content)
+        values (#{infoId}, #{content})
     </insert>
 </mapper>

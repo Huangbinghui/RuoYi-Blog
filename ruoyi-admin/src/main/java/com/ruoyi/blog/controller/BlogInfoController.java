@@ -2,6 +2,7 @@ package com.ruoyi.blog.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +30,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/blog")
-public class BlogInfoController extends BaseController
-{
+public class BlogInfoController extends BaseController {
     @Autowired
     private IBlogInfoService blogInfoService;
 
@@ -39,8 +39,7 @@ public class BlogInfoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('blog:blog:list')")
     @GetMapping("/list")
-    public TableDataInfo list(BlogInfo blogInfo)
-    {
+    public TableDataInfo list(BlogInfo blogInfo) {
         startPage();
         List<BlogInfo> list = blogInfoService.selectBlogInfoList(blogInfo);
         return getDataTable(list);
@@ -52,8 +51,7 @@ public class BlogInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('blog:blog:export')")
     @Log(title = "博客管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BlogInfo blogInfo)
-    {
+    public void export(HttpServletResponse response, BlogInfo blogInfo) {
         List<BlogInfo> list = blogInfoService.selectBlogInfoList(blogInfo);
         ExcelUtil<BlogInfo> util = new ExcelUtil<BlogInfo>(BlogInfo.class);
         util.exportExcel(response, list, "博客管理数据");
@@ -64,8 +62,7 @@ public class BlogInfoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('blog:blog:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(blogInfoService.selectBlogInfoById(id));
     }
 
@@ -75,8 +72,7 @@ public class BlogInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('blog:blog:add')")
     @Log(title = "博客管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BlogInfo blogInfo)
-    {
+    public AjaxResult add(@RequestBody BlogInfo blogInfo) {
         return toAjax(blogInfoService.insertBlogInfo(blogInfo));
     }
 
@@ -86,8 +82,7 @@ public class BlogInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('blog:blog:edit')")
     @Log(title = "博客管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BlogInfo blogInfo)
-    {
+    public AjaxResult edit(@RequestBody BlogInfo blogInfo) {
         return toAjax(blogInfoService.updateBlogInfo(blogInfo));
     }
 
@@ -97,8 +92,7 @@ public class BlogInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('blog:blog:remove')")
     @Log(title = "博客管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{id}")
-    public AjaxResult remove(@PathVariable Long id)
-    {
+    public AjaxResult remove(@PathVariable Long id) {
         return toAjax(blogInfoService.deleteBlogInfoById(id));
     }
 }
