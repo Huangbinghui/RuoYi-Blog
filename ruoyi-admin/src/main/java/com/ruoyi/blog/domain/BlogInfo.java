@@ -1,11 +1,9 @@
 package com.ruoyi.blog.domain;
 
-import java.util.List;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 博客管理对象 rm_blog_info
@@ -17,7 +15,7 @@ public class BlogInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
-    private Long id;
+    private String id;
 
     /** 是否已删除 */
     @Excel(name = "是否已删除")
@@ -55,14 +53,17 @@ public class BlogInfo extends BaseEntity {
     @Excel(name = "版本号")
     private String version;
 
+    @Excel(name = "作者")
+    private String author;
+
     /** 博客内容信息 */
     private Blog blog;
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -144,6 +145,14 @@ public class BlogInfo extends BaseEntity {
 
     public void setBlog(Blog blog) {
         this.blog = blog;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     @Override

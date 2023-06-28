@@ -1,8 +1,8 @@
 package com.ruoyi.blog.service;
 
-import java.util.List;
 import com.ruoyi.blog.domain.BlogInfo;
-import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 博客管理Service接口
@@ -10,15 +10,14 @@ import org.apache.ibatis.annotations.Mapper;
  * @author herberth
  * @date 2023-06-17
  */
-public interface IBlogInfoService
-{
+public interface IBlogInfoService {
     /**
      * 查询博客管理
      *
      * @param id 博客管理主键
      * @return 博客管理
      */
-    public BlogInfo selectBlogInfoById(Long id);
+    public BlogInfo selectBlogInfoById(String id);
 
     /**
      * 查询博客管理列表
@@ -51,5 +50,5 @@ public interface IBlogInfoService
      * @param id 博客管理主键
      * @return 结果
      */
-    public int deleteBlogInfoById(Long id);
+    public int deleteBlogInfoById(String id);
 }

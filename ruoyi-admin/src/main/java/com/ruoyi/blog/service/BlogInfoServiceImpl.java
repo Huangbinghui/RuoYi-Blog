@@ -1,20 +1,18 @@
 package com.ruoyi.blog.service;
 
-import java.util.List;
-
+import com.ruoyi.blog.domain.Blog;
+import com.ruoyi.blog.domain.BlogInfo;
+import com.ruoyi.blog.mapper.BlogInfoMapper;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.SnowFlake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-
-import com.ruoyi.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
-import com.ruoyi.blog.domain.Blog;
-import com.ruoyi.blog.mapper.BlogInfoMapper;
-import com.ruoyi.blog.domain.BlogInfo;
+
+import java.util.List;
 
 /**
  * 博客管理Service业务层处理
@@ -39,7 +37,7 @@ public class BlogInfoServiceImpl implements IBlogInfoService {
      * @return 博客管理
      */
     @Override
-    public BlogInfo selectBlogInfoById(Long id) {
+    public BlogInfo selectBlogInfoById(String id) {
         return blogInfoMapper.selectBlogInfoById(id);
     }
 
@@ -64,7 +62,10 @@ public class BlogInfoServiceImpl implements IBlogInfoService {
     @Override
     public int insertBlogInfo(BlogInfo blogInfo) {
         blogInfo.setId(snowFlake.nextId());
+        blogInfo.setCreateBy(SecurityUtils.getUsername());
         blogInfo.setCreateTime(DateUtils.getNowDate());
+        blogInfo.setAuthorId(SecurityUtils.getUserId());
+        blogInfo.setIsDeleted(0);
         int rows = blogInfoMapper.insertBlogInfo(blogInfo);
         insertBlog(blogInfo);
         return rows;
@@ -94,7 +95,7 @@ public class BlogInfoServiceImpl implements IBlogInfoService {
      */
     @Transactional
     @Override
-    public int deleteBlogInfoById(Long id) {
+    public int deleteBlogInfoById(String id) {
         return blogInfoMapper.deleteBlogByInfoId(id);
     }
 
@@ -105,12 +106,12 @@ public class BlogInfoServiceImpl implements IBlogInfoService {
      */
     public void insertBlog(BlogInfo blogInfo) {
         Blog blog = blogInfo.getBlog();
-        Long id = blogInfo.getId();
+        String id = blogInfo.getId();
         if (StringUtils.isNotNull(blog)) {
-                blog.setInfoId(id);
-                blogInfoMapper.insertBlog(blog);
+            blog.setInfoId(id);
+            blogInfoMapper.insertBlog(blog);
         } else {
-            throw new ServiceException("博客内容为空！",999999);
+            throw new ServiceException("博客内容为空！", 999999);
         }
     }
 }

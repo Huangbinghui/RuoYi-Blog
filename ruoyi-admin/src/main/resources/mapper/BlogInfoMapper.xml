@@ -19,6 +19,8 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+
+        <result property="author" column="author"/>
     </resultMap>
 
     <resultMap id="BlogInfoResult" type="BlogInfo" extends="baseBlogInfoResult">
@@ -31,21 +33,23 @@
     </resultMap>
 
     <sql id="selectBlogInfoVo">
-        select id,
-               is_deleted,
-               title,
-               blog_type,
-               is_top,
-               author_id,
-               original_link,
-               is_original,
-               is_private,
-               version,
-               create_by,
-               create_time,
-               update_by,
-               update_time
-        from rm_blog_info
+        select b.id,
+               b.is_deleted,
+               b.title,
+               b.blog_type,
+               b.is_top,
+               b.author_id,
+               b.original_link,
+               b.is_original,
+               b.is_private,
+               b.version,
+               b.create_by,
+               b.create_time,
+               b.update_by,
+               b.update_time,
+               u.user_name as author
+        from rm_blog_info b
+                 left join sys_user u on b.author_id = u.user_id
     </sql>
 
     <sql id="selectBlogVo">
@@ -56,26 +60,26 @@
     <select id="selectBlogInfoList" parameterType="BlogInfo" resultMap="BlogInfoResult">
         <include refid="selectBlogInfoVo"/>
         <where>
-            <if test="isDeleted != null ">and is_deleted = #{isDeleted}</if>
-            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
-            <if test="blogType != null ">and blog_type = #{blogType}</if>
-            <if test="isTop != null ">and is_top = #{isTop}</if>
-            <if test="authorId != null ">and author_id = #{authorId}</if>
-            <if test="originalLink != null  and originalLink != ''">and original_link = #{originalLink}</if>
-            <if test="isOriginal != null ">and is_original = #{isOriginal}</if>
-            <if test="isPrivate != null ">and is_private = #{isPrivate}</if>
-            <if test="version != null  and version != ''">and version = #{version}</if>
+            <if test="isDeleted != null ">and b.is_deleted = #{isDeleted}</if>
+            <if test="title != null  and title != ''">and b.title like concat('%', #{title}, '%')</if>
+            <if test="blogType != null ">and b.blog_type = #{blogType}</if>
+            <if test="isTop != null ">and b.is_top = #{isTop}</if>
+            <if test="authorId != null ">and b.author_id = #{authorId}</if>
+            <if test="originalLink != null  and originalLink != ''">and b.original_link = #{originalLink}</if>
+            <if test="isOriginal != null ">and b.is_original = #{isOriginal}</if>
+            <if test="isPrivate != null ">and b.is_private = #{isPrivate}</if>
+            <if test="version != null  and version != ''">and b.version = #{version}</if>
         </where>
     </select>
 
-    <select id="selectBlogList" parameterType="Long" resultMap="BlogResult">
+    <select id="selectBlogList" parameterType="String" resultMap="BlogResult">
         <include refid="selectBlogVo"></include>
         <where>
             <if test="infoId != null ">and info_id = #{infoId}</if>
         </where>
     </select>
 
-    <select id="selectBlogInfoById" parameterType="Long" resultMap="BlogInfoResult">
+    <select id="selectBlogInfoById" parameterType="String" resultMap="BlogInfoResult">
         select a.id,
                a.is_deleted,
                a.title,
@@ -151,7 +155,7 @@
         where id = #{id}
     </update>
 
-    <update id="deleteBlogByInfoId" parameterType="Long">
+    <update id="deleteBlogByInfoId" parameterType="String">
         update rm_blog_info
         set is_deleted = '1'
         where id = #{id}

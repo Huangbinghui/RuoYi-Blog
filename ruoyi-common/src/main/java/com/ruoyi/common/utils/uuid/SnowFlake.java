@@ -42,7 +42,7 @@ public class SnowFlake {
      *
      * @return 下一个ID
      */
-    public synchronized long nextId() {
+    public synchronized String nextId() {
         long currTimestamp = getTimestamp();
         if (currTimestamp < lastTimestamp) {
             throw new UtilException("Clock moved backwards. Refusing to generate id");
@@ -64,10 +64,10 @@ public class SnowFlake {
         lastTimestamp = currTimestamp;
 
         // 移位并通过或运算拼到一起组成64位的ID
-        return (currTimestamp - START_TIMESTAMP) << TIMESTAMP_LEFT // 时间戳部分
+        return String.valueOf((currTimestamp - START_TIMESTAMP) << TIMESTAMP_LEFT // 时间戳部分
                 | datacenterId << DATACENTER_LEFT // 数据中心部分
                 | machineId << MACHINE_LEFT // 机器标识部分
-                | sequence; // 序列号部分
+                | sequence); // 序列号部分
     }
 
     /**

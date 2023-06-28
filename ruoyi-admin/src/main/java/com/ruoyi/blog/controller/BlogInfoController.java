@@ -1,26 +1,19 @@
 package com.ruoyi.blog.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.blog.domain.BlogInfo;
+import com.ruoyi.blog.service.IBlogInfoService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.blog.domain.BlogInfo;
-import com.ruoyi.blog.service.IBlogInfoService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 博客管理Controller
@@ -53,7 +46,7 @@ public class BlogInfoController extends BaseController {
     @PostMapping("/export")
     public void export(HttpServletResponse response, BlogInfo blogInfo) {
         List<BlogInfo> list = blogInfoService.selectBlogInfoList(blogInfo);
-        ExcelUtil<BlogInfo> util = new ExcelUtil<BlogInfo>(BlogInfo.class);
+        ExcelUtil<BlogInfo> util = new ExcelUtil<>(BlogInfo.class);
         util.exportExcel(response, list, "博客管理数据");
     }
 
@@ -62,7 +55,7 @@ public class BlogInfoController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('blog:blog:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return success(blogInfoService.selectBlogInfoById(id));
     }
 
@@ -92,7 +85,7 @@ public class BlogInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('blog:blog:remove')")
     @Log(title = "博客管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{id}")
-    public AjaxResult remove(@PathVariable Long id) {
+    public AjaxResult remove(@PathVariable String id) {
         return toAjax(blogInfoService.deleteBlogInfoById(id));
     }
 }

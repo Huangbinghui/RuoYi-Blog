@@ -1,9 +1,10 @@
 package com.ruoyi.blog.mapper;
 
-import java.util.List;
-import com.ruoyi.blog.domain.BlogInfo;
 import com.ruoyi.blog.domain.Blog;
+import com.ruoyi.blog.domain.BlogInfo;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 博客管理Mapper接口
@@ -12,15 +13,14 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2023-06-17
  */
 @Mapper
-public interface BlogInfoMapper
-{
+public interface BlogInfoMapper {
     /**
      * 查询博客管理
      *
      * @param id 博客管理主键
      * @return 博客管理
      */
-    public BlogInfo selectBlogInfoById(Long id);
+    public BlogInfo selectBlogInfoById(String id);
 
     /**
      * 查询博客管理列表
@@ -61,5 +61,5 @@ public interface BlogInfoMapper
      * @param id 博客管理ID
      * @return 结果
      */
-    public int deleteBlogByInfoId(Long id);
+    public int deleteBlogByInfoId(String id);
 }
