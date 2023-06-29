@@ -81,6 +81,7 @@ public class BlogInfoServiceImpl implements IBlogInfoService {
     @Override
     public int updateBlogInfo(BlogInfo blogInfo) {
         blogInfo.setUpdateTime(DateUtils.getNowDate());
+        blogInfo.setUpdateBy(SecurityUtils.getUsername());
         blogInfoMapper.deleteBlogByInfoId(blogInfo.getId());
         insertBlog(blogInfo);
         return blogInfoMapper.updateBlogInfo(blogInfo);
